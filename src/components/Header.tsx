@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
-import { PORTFOLIO_DATA } from '@/data/portfolio';
+import { usePortfolioData } from './PortfolioDataContext';
 import { useTheme } from './ThemeContext';
 import { RollingText } from './RollingText';
 
@@ -14,6 +14,7 @@ const NAV_ITEMS = [
 ];
 
 export function Header() {
+  const { data } = usePortfolioData();
   const { darkMode, motionEnabled, toggleDarkMode, toggleMotion } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolledPastHero, setScrolledPastHero] = useState(false);
@@ -56,8 +57,8 @@ export function Header() {
             href="#top"
             className="pointer-events-auto rolling-trigger inline-flex flex-col text-[clamp(17px,1.45vw,22px)] font-normal uppercase leading-[1.12] tracking-[0.02em] text-[var(--ink)]"
           >
-            <RollingText>{PORTFOLIO_DATA.profile.firstName}</RollingText>
-            <RollingText>Ojha</RollingText>
+            <RollingText>{data.profile.firstName}</RollingText>
+            <RollingText>{data.profile.lastName}</RollingText>
           </a>
 
           {/* Right: Desktop uppercase nav links + Motion switch */}
@@ -184,8 +185,8 @@ export function Header() {
               onClick={() => setMobileOpen(false)}
               className="inline-flex flex-col text-lg font-normal uppercase leading-[1.12] tracking-[0.02em] text-[var(--ink)]"
             >
-              <span>{PORTFOLIO_DATA.profile.firstName}</span>
-              <span>Ojha</span>
+              <span>{data.profile.firstName}</span>
+              <span>{data.profile.lastName}</span>
             </a>
             <button
               type="button"
@@ -253,13 +254,13 @@ export function Header() {
 
             <div className="flex flex-wrap gap-4 text-sm">
               <a
-                href={`mailto:${PORTFOLIO_DATA.profile.email}`}
+                href={`mailto:${data.profile.email}`}
                 className="rolling-trigger rounded-full border border-[var(--border-strong)] px-4 py-2 text-[var(--ink)]"
               >
                 <RollingText>Email ↗</RollingText>
               </a>
               <a
-                href={PORTFOLIO_DATA.profile.linkedin}
+                href={data.profile.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="rolling-trigger rounded-full border border-[var(--border-strong)] px-4 py-2 text-[var(--ink)]"

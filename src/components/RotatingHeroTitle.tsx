@@ -1,20 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-
-export interface RoleTitle {
-  line1: string;
-  line2: string;
-  full: string;
-}
-
-export const HERO_TITLES: RoleTitle[] = [
-  { line1: 'CYBERSECURITY', line2: 'ANALYST', full: 'CYBERSECURITY ANALYST' },
-  { line1: 'SECURITY', line2: 'RESEARCHER', full: 'SECURITY RESEARCHER' },
-  { line1: 'SOC', line2: 'ANALYST', full: 'SOC ANALYST' },
-  { line1: 'THREAT', line2: 'HUNTER', full: 'THREAT HUNTER' },
-  { line1: 'BLUE TEAM', line2: 'DEFENDER', full: 'BLUE TEAM DEFENDER' },
-];
+import { PORTFOLIO_DATA, RoleTitle } from '@/data/portfolio';
 
 type TransitionKind = 'roll' | 'hex' | 'blur' | 'flip3d';
 
@@ -23,7 +10,7 @@ const HEX_GLYPHS = ['0', '1', 'A', 'B', 'C', 'D', 'E', 'F', '#', '_', '/'];
 const HOLD_MS = 2800;
 
 const RADIUS = 130;
-const MAX_DISP = 12; // 10px - 14px subtle nudge
+const MAX_DISP = 12;
 const LERP = 0.18;
 
 interface CharPhysics {
@@ -33,9 +20,14 @@ interface CharPhysics {
 
 interface RotatingHeroTitleProps {
   motionEnabled: boolean;
+  titles?: RoleTitle[];
 }
 
-export function RotatingHeroTitle({ motionEnabled }: RotatingHeroTitleProps) {
+export function RotatingHeroTitle({
+  motionEnabled,
+  titles = PORTFOLIO_DATA.heroTitles,
+}: RotatingHeroTitleProps) {
+  const safeTitles = titles.length > 0 ? titles : PORTFOLIO_DATA.heroTitles;
   const [activeIndex, setActiveIndex] = useState(0);
   const [prevIndex, setPrevIndex] = useState<number | null>(null);
   const [transitionKind, setTransitionKind] = useState<TransitionKind>('roll');
@@ -47,7 +39,14 @@ export function RotatingHeroTitle({ motionEnabled }: RotatingHeroTitleProps) {
   const charRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const physicsRef = useRef<CharPhysics[]>([]);
 
-  // Detect desktop fine pointer vs touch/coarse pointer
+  useEffect(() => {
+    if (activeIndex >= safeTitles.length) {
+      setActiveIndex(0);
+      setPrevIndex(null);
+      setPhase('idle');
+    }
+  }, [safeTitles.length, activeIndex]);
+
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const mq = window.matchMedia('(hover: hover) and (pointer: fine)');
@@ -57,7 +56,6 @@ export function RotatingHeroTitle({ motionEnabled }: RotatingHeroTitleProps) {
     return () => mq.removeEventListener('change', update);
   }, []);
 
-  // Pause cleanly on CYBERSECURITY ANALYST when Motion is off
   useEffect(() => {
     if (!motionEnabled) {
       setActiveIndex(0);
@@ -68,28 +66,26 @@ export function RotatingHeroTitle({ motionEnabled }: RotatingHeroTitleProps) {
     }
   }, [motionEnabled]);
 
-  // Phase 1: Hold current title readable for 2.8s
   useEffect(() => {
-    if (!motionEnabled || phase !== 'idle') return;
+    if (!motionEnabled || phase !== 'idle' || safeTitles.length <= 1) return;
 
     const holdTimer = window.setTimeout(() => {
       const kind = TRANSITION_ORDER[switchCountRef.current % TRANSITION_ORDER.length];
       switchCountRef.current += 1;
 
       setPrevIndex(activeIndex);
-      setActiveIndex((prev) => (prev + 1) % HERO_TITLES.length);
+      setActiveIndex((prev) => (prev + 1) % safeTitles.length);
       setTransitionKind(kind);
       setPhase('animating');
     }, HOLD_MS);
 
     return () => window.clearTimeout(holdTimer);
-  }, [motionEnabled, phase, activeIndex]);
+  }, [motionEnabled, phase, activeIndex, safeTitles.length]);
 
-  // Phase 2: Complete active transition cleanly
   useEffect(() => {
     if (!motionEnabled || phase !== 'animating') return;
 
-    const targetTitle = HERO_TITLES[activeIndex];
+    const targetTitle = safeTitles[activeIndex] ?? safeTitles[0];
 
     if (transitionKind === 'hex') {
       const duration = 520;
@@ -151,13 +147,11 @@ export function RotatingHeroTitle({ motionEnabled }: RotatingHeroTitleProps) {
     }, settleMs);
 
     return () => window.clearTimeout(settleTimer);
-  }, [motionEnabled, phase, activeIndex, transitionKind]);
+  }, [motionEnabled, phase, activeIndex, transitionKind, safeTitles]);
 
-  // Per-letter magnetic cursor repulsion (desktop + Motion on)
   const magneticActive = motionEnabled && isFinePointer;
 
   useEffect(() => {
-    // Reset all char transforms cleanly if disabled
     if (!magneticActive) {
       charRefs.current.forEach((el) => {
         if (el) el.style.transform = '';
@@ -200,7 +194,6 @@ export function RotatingHeroTitle({ motionEnabled }: RotatingHeroTitleProps) {
 
         if (pointer.inside) {
           const rect = el.getBoundingClientRect();
-          // Subtract current displacement to get true rest center
           const restCx = rect.left + rect.width * 0.5 - st.x;
           const restCy = rect.top + rect.height * 0.5 - st.y;
 
@@ -250,11 +243,10 @@ export function RotatingHeroTitle({ motionEnabled }: RotatingHeroTitleProps) {
     };
   }, [magneticActive, activeIndex, phase, transitionKind]);
 
-  const current = HERO_TITLES[motionEnabled ? activeIndex : 0];
-  const outgoing = prevIndex !== null ? HERO_TITLES[prevIndex] : null;
+  const current = safeTitles[motionEnabled ? activeIndex % safeTitles.length : 0];
+  const outgoing = prevIndex !== null ? safeTitles[prevIndex % safeTitles.length] : null;
   const totalSlots = current.line1.length + current.line2.length;
 
-  // Keep charRefs trimmed to active character count on render
   charRefs.current.length = totalSlots;
 
   const renderCharsLine = (
@@ -315,13 +307,11 @@ export function RotatingHeroTitle({ motionEnabled }: RotatingHeroTitleProps) {
     >
       <span className="sr-only">{current.full}</span>
 
-      {/* Fixed-height Regular Inter sans-serif asymmetric two-line container */}
       <div
         aria-hidden="true"
         className="relative grid min-h-[2em] w-full items-center font-sans text-[clamp(2.35rem,9.6vw,9.4rem)] font-normal uppercase leading-[0.98] tracking-[-0.02em] text-[var(--ink)] antialiased"
         style={{ perspective: '600px' }}
       >
-        {/* Outgoing layer */}
         {motionEnabled &&
           phase === 'animating' &&
           outgoing &&
@@ -337,7 +327,6 @@ export function RotatingHeroTitle({ motionEnabled }: RotatingHeroTitleProps) {
             </div>
           )}
 
-        {/* Incoming / Active layer */}
         <div
           key={
             motionEnabled && phase === 'animating'

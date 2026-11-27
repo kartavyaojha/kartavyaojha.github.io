@@ -12,6 +12,12 @@ export type PreviewVariant =
   | 'research-paper'
   | 'acs-outreach';
 
+export interface RoleTitle {
+  line1: string;
+  line2: string;
+  full: string;
+}
+
 export interface ProjectItem {
   id: string;
   index: string;
@@ -27,6 +33,7 @@ export interface ProjectItem {
   outcomes: string[];
   stack: string[];
   previewVariant: PreviewVariant;
+  imageUrl?: string;
   links: { label: string; url: string }[];
 }
 
@@ -40,14 +47,60 @@ export interface PlaygroundItem {
   tags: string[];
 }
 
-export const PORTFOLIO_DATA = {
+export interface CertificationItem {
+  title: string;
+  issuer: string;
+  year: string;
+  url: string;
+}
+
+export interface PortfolioData {
+  profile: {
+    name: string;
+    firstName: string;
+    lastName: string;
+    title: string;
+    headlineLine1: string;
+    headlineLine2: string;
+    currentFocus: string;
+    location: string;
+    email: string;
+    linkedin: string;
+    linkedinDisplay: string;
+    github: string;
+    blog: string;
+    resume: string;
+    avatar: string;
+    heroIntro: string;
+  };
+  heroTitles: RoleTitle[];
+  categories: ProjectCategory[];
+  projects: ProjectItem[];
+  playground: {
+    title: string;
+    roleBadge: string;
+    summary: string;
+    items: PlaygroundItem[];
+  };
+  skillsMarquee: string[];
+  about: {
+    story: string[];
+    stack: string[];
+    certifications: CertificationItem[];
+    awards: string[];
+    hobbiesLine: string;
+  };
+}
+
+export const PORTFOLIO_DATA: PortfolioData = {
   profile: {
     name: 'Kartavya Ojha',
     firstName: 'Kartavya',
+    lastName: 'Ojha',
     title: 'Kartavya Ojha — Security Engineer & Cybersecurity Researcher',
     headlineLine1: 'Cybersecurity Researcher',
     headlineLine2: '& Security Engineer',
-    currentFocus: 'Building SOC simulations & Splunk detections',
+    currentFocus: 'Security Engineer & SOC Analyst',
     location: 'Indore, India',
     email: 'kartavya9977@gmail.com',
     linkedin: 'https://linkedin.com/in/kartavya-ojha-564726314',
@@ -59,13 +112,20 @@ export const PORTFOLIO_DATA = {
     heroIntro:
       'I build SOC triage simulations, security testing tools, and threat-detection workflows grounded in real incident response. Previously Technical Projects & Outreach Lead at ACS and Cybersecurity Intern at Albus Security, now studying BCA at Mandsaur University.',
   },
+  heroTitles: [
+    { line1: 'CYBERSECURITY', line2: 'ANALYST', full: 'CYBERSECURITY ANALYST' },
+    { line1: 'SECURITY', line2: 'RESEARCHER', full: 'SECURITY RESEARCHER' },
+    { line1: 'SOC', line2: 'ANALYST', full: 'SOC ANALYST' },
+    { line1: 'THREAT', line2: 'HUNTER', full: 'THREAT HUNTER' },
+    { line1: 'BLUE TEAM', line2: 'DEFENDER', full: 'BLUE TEAM DEFENDER' },
+  ],
   categories: [
     'All',
     'SOC & Detection',
     'AppSec & Pentesting',
     'Security Research',
     'Mentorship & Leadership',
-  ] as ProjectCategory[],
+  ],
   projects: [
     {
       id: 'soc-l1-simlab',
@@ -89,6 +149,7 @@ export const PORTFOLIO_DATA = {
       ],
       stack: ['Python', 'Streamlit', 'SOC Operations', 'Incident Response', 'Alert Triage'],
       previewVariant: 'soc-simlab',
+      imageUrl: '',
       links: [
         {
           label: 'GitHub Repository',
@@ -117,6 +178,7 @@ export const PORTFOLIO_DATA = {
       ],
       stack: ['Python', 'Burp Suite', 'Linux', 'Web Security', 'Penetration Testing'],
       previewVariant: 'appsec-suite',
+      imageUrl: '',
       links: [
         {
           label: 'GitHub Profile',
@@ -145,6 +207,7 @@ export const PORTFOLIO_DATA = {
       ],
       stack: ['Python', 'Security Frameworks', 'Secure Code Review', 'Mentorship', 'Project Management'],
       previewVariant: 'vaf-guardian',
+      imageUrl: '',
       links: [
         {
           label: 'LinkedIn Credentials',
@@ -172,6 +235,7 @@ export const PORTFOLIO_DATA = {
       ],
       stack: ['SOC Operations', 'Alert Fatigue', 'Splunk & SIEM', 'Detection Engineering', 'Research'],
       previewVariant: 'research-paper',
+      imageUrl: '',
       links: [
         {
           label: 'Read SOC School Guide',
@@ -200,6 +264,7 @@ export const PORTFOLIO_DATA = {
       ],
       stack: ['Cybersecurity Awareness', 'Technical Workshops', 'Team Leadership', 'Onboarding', 'Content Strategy'],
       previewVariant: 'acs-outreach',
+      imageUrl: '',
       links: [
         {
           label: 'Connect on LinkedIn',
@@ -207,7 +272,7 @@ export const PORTFOLIO_DATA = {
         },
       ],
     },
-  ] as ProjectItem[],
+  ],
   playground: {
     title: 'Playground',
     roleBadge: 'Writeups, Exploit Labs & Splunk',
@@ -263,7 +328,7 @@ export const PORTFOLIO_DATA = {
           'Writing SPL queries for authentication anomalies, process-creation telemetry, and alert noise reduction as part of ongoing SOC simulation work.',
         tags: ['Splunk', 'SPL', 'Threat Detection'],
       },
-    ] as PlaygroundItem[],
+    ],
   },
   skillsMarquee: [
     'Penetration Testing',
@@ -332,3 +397,40 @@ export const PORTFOLIO_DATA = {
       'When I’m away from logs and payloads, I’m playing football (former school vice-captain and district winner), solving CTFs, or writing security breakdowns on DefenceLogic.',
   },
 };
+
+export function mergePortfolioData(raw: Partial<PortfolioData> | null | undefined): PortfolioData {
+  if (!raw) return PORTFOLIO_DATA;
+  return {
+    profile: { ...PORTFOLIO_DATA.profile, ...(raw.profile ?? {}) },
+    heroTitles:
+      Array.isArray(raw.heroTitles) && raw.heroTitles.length > 0
+        ? raw.heroTitles
+        : PORTFOLIO_DATA.heroTitles,
+    categories:
+      Array.isArray(raw.categories) && raw.categories.length > 0
+        ? raw.categories
+        : PORTFOLIO_DATA.categories,
+    projects: Array.isArray(raw.projects) ? raw.projects : PORTFOLIO_DATA.projects,
+    playground: {
+      ...PORTFOLIO_DATA.playground,
+      ...(raw.playground ?? {}),
+      items: Array.isArray(raw.playground?.items)
+        ? raw.playground.items
+        : PORTFOLIO_DATA.playground.items,
+    },
+    skillsMarquee:
+      Array.isArray(raw.skillsMarquee) && raw.skillsMarquee.length > 0
+        ? raw.skillsMarquee
+        : PORTFOLIO_DATA.skillsMarquee,
+    about: {
+      ...PORTFOLIO_DATA.about,
+      ...(raw.about ?? {}),
+      story: Array.isArray(raw.about?.story) ? raw.about.story : PORTFOLIO_DATA.about.story,
+      stack: Array.isArray(raw.about?.stack) ? raw.about.stack : PORTFOLIO_DATA.about.stack,
+      certifications: Array.isArray(raw.about?.certifications)
+        ? raw.about.certifications
+        : PORTFOLIO_DATA.about.certifications,
+      awards: Array.isArray(raw.about?.awards) ? raw.about.awards : PORTFOLIO_DATA.about.awards,
+    },
+  };
+}

@@ -21,7 +21,6 @@ function drawProjectGraphic(
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, w, h);
 
-  // Subtle architectural grid lines
   ctx.strokeStyle = line;
   ctx.lineWidth = 1;
   for (let x = 48; x < w; x += 64) {
@@ -146,7 +145,13 @@ function drawProjectGraphic(
 /**
  * Interactive 2D water-ripple displacement canvas for the Spotlight Preview image.
  */
-export function WaterPreviewCanvas({ variant }: { variant: PreviewVariant }) {
+export function WaterPreviewCanvas({
+  variant,
+  imageUrl,
+}: {
+  variant: PreviewVariant;
+  imageUrl?: string;
+}) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const { darkMode, motionEnabled } = useTheme();
   const motionRef = useRef(motionEnabled);
@@ -166,7 +171,6 @@ export function WaterPreviewCanvas({ variant }: { variant: PreviewVariant }) {
     canvas.width = simW;
     canvas.height = simH;
 
-    // Offscreen source artwork
     const srcCanvas = document.createElement('canvas');
     srcCanvas.width = simW;
     srcCanvas.height = simH;
@@ -174,12 +178,37 @@ export function WaterPreviewCanvas({ variant }: { variant: PreviewVariant }) {
     if (!srcCtx) return;
 
     drawProjectGraphic(srcCtx, simW, simH, variant, darkMode);
-    const srcImage = srcCtx.getImageData(0, 0, simW, simH);
-    const srcData = srcImage.data;
+    let srcImage = srcCtx.getImageData(0, 0, simW, simH);
+    let srcData = srcImage.data;
     const outImage = ctx.createImageData(simW, simH);
     const outData = outImage.data;
 
-    // Half-res heightmap for crisp 60fps wave physics
+    ctx.putImageData(srcImage, 0, 0);
+
+    // Load custom preview image if provided in Firestore/CMS
+    let cancelled = false;
+    if (imageUrl && imageUrl.trim()) {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        if (cancelled) return;
+        const scale = Math.max(simW / img.width, simH / img.height);
+        const dw = img.width * scale;
+        const dh = img.height * scale;
+        const dx = (simW - dw) * 0.5;
+        const dy = (simH - dh) * 0.5;
+        srcCtx.drawImage(img, dx, dy, dw, dh);
+        try {
+          srcImage = srcCtx.getImageData(0, 0, simW, simH);
+          srcData = srcImage.data;
+          ctx.putImageData(srcImage, 0, 0);
+        } catch {
+          // Cross-origin image without CORS headers: keep vector fallback for pixel buffer
+        }
+      };
+      img.src = imageUrl.trim();
+    }
+
     const mapW = 240;
     const mapH = 150;
     let buf1 = new Float32Array(mapW * mapH);
@@ -206,9 +235,6 @@ export function WaterPreviewCanvas({ variant }: { variant: PreviewVariant }) {
       }
       activeEnergy = 120;
     };
-
-    // Draw clean initial frame
-    ctx.putImageData(srcImage, 0, 0);
 
     const onPointerMove = (e: PointerEvent) => {
       if (!motionRef.current) return;
@@ -246,7 +272,6 @@ export function WaterPreviewCanvas({ variant }: { variant: PreviewVariant }) {
         buf1 = buf2;
         buf2 = tmp;
 
-        // Displace pixels via wave slope
         for (let y = 0; y < simH; y++) {
           const my = Math.min(mapH - 2, Math.max(1, Math.floor((y / simH) * mapH)));
           const mRow = my * mapW;
@@ -277,11 +302,12 @@ export function WaterPreviewCanvas({ variant }: { variant: PreviewVariant }) {
     rafId = requestAnimationFrame(step);
 
     return () => {
+      cancelled = true;
       cancelAnimationFrame(rafId);
       canvas.removeEventListener('pointermove', onPointerMove);
       canvas.removeEventListener('pointerdown', onPointerDown);
     };
-  }, [variant, darkMode]);
+  }, [variant, darkMode, imageUrl]);
 
   return (
     <canvas

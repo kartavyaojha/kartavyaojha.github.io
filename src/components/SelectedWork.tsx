@@ -1,39 +1,39 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import { PORTFOLIO_DATA, ProjectCategory, ProjectItem } from '@/data/portfolio';
+import { ProjectCategory, ProjectItem } from '@/data/portfolio';
+import { usePortfolioData } from './PortfolioDataContext';
 import { WaterPreviewCanvas } from './WaterPreviewCanvas';
 import { CaseStudyDrawer } from './CaseStudyDrawer';
 import { RollingText } from './RollingText';
 
 export function SelectedWork() {
-  const [spotlightId, setSpotlightId] = useState<string>(PORTFOLIO_DATA.projects[0].id);
+  const { data } = usePortfolioData();
+  const allProjects = data.projects;
+  const categories = data.categories;
+
+  const [spotlightId, setSpotlightId] = useState<string>(allProjects[0]?.id ?? '');
   const [selectedCategory, setSelectedCategory] = useState<ProjectCategory>('All');
   const [drawerProject, setDrawerProject] = useState<ProjectItem | null>(null);
   const [playgroundOpen, setPlaygroundOpen] = useState(false);
-
-  const allProjects = PORTFOLIO_DATA.projects;
 
   const spotlightIndex = useMemo(() => {
     const idx = allProjects.findIndex((p) => p.id === spotlightId);
     return idx >= 0 ? idx : 0;
   }, [allProjects, spotlightId]);
 
-  const spotlightProject = allProjects[spotlightIndex];
+  const spotlightProject = allProjects[spotlightIndex] ?? allProjects[0];
 
   const categoryCounts = useMemo(() => {
-    const map: Record<ProjectCategory, number> = {
-      All: allProjects.length,
-      'SOC & Detection': 0,
-      'AppSec & Pentesting': 0,
-      'Security Research': 0,
-      'Mentorship & Leadership': 0,
-    };
+    const map: Record<string, number> = { All: allProjects.length };
+    categories.forEach((cat) => {
+      if (cat !== 'All') map[cat] = 0;
+    });
     allProjects.forEach((p) => {
-      map[p.category] += 1;
+      map[p.category] = (map[p.category] ?? 0) + 1;
     });
     return map;
-  }, [allProjects]);
+  }, [allProjects, categories]);
 
   const filteredProjects = useMemo(() => {
     if (selectedCategory === 'All') return allProjects;
@@ -41,6 +41,8 @@ export function SelectedWork() {
   }, [allProjects, selectedCategory]);
 
   const padTwo = (n: number) => String(n).padStart(2, '0');
+
+  if (!spotlightProject) return null;
 
   return (
     <section
@@ -56,7 +58,6 @@ export function SelectedWork() {
           </span>
         </div>
 
-        {/* Showcase Stage */}
         <div className="mt-10 grid items-center gap-10 lg:grid-cols-12 lg:gap-12">
           <div className="space-y-6 lg:col-span-5">
             <div className="flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--ink-muted)]">
@@ -90,13 +91,15 @@ export function SelectedWork() {
             </div>
           </div>
 
-          {/* Wide Interactive Water-Ripple Preview Stage */}
           <div className="lg:col-span-7">
             <div
               onDoubleClick={() => setDrawerProject(spotlightProject)}
               className="overflow-hidden"
             >
-              <WaterPreviewCanvas variant={spotlightProject.previewVariant} />
+              <WaterPreviewCanvas
+                variant={spotlightProject.previewVariant}
+                imageUrl={spotlightProject.imageUrl}
+              />
             </div>
             <div className="mt-3 flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--ink-muted)]">
               <span>Move over the picture to stir the water</span>
@@ -111,7 +114,6 @@ export function SelectedWork() {
           </div>
         </div>
 
-        {/* Bottom Horizontal Selector Strip */}
         <ul className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-5 sm:gap-6">
           {allProjects.map((project, idx) => {
             const active = project.id === spotlightProject.id;
@@ -143,13 +145,12 @@ export function SelectedWork() {
             technical mentorship built between 2024 and 2026.
           </p>
 
-          {/* Minimal pill-shaped category filters with live counts */}
           <div
             role="tablist"
             aria-label="Filter projects by category"
             className="flex flex-wrap gap-2"
           >
-            {PORTFOLIO_DATA.categories.map((cat) => {
+            {categories.map((cat) => {
               const active = selectedCategory === cat;
               return (
                 <button
@@ -165,27 +166,24 @@ export function SelectedWork() {
                   }`}
                 >
                   <span>{cat}</span>
-                  <span className="tabular-index opacity-60">{categoryCounts[cat]}</span>
+                  <span className="tabular-index opacity-60">{categoryCounts[cat] ?? 0}</span>
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* Clean Hairline-Divided Project Rows */}
         <div className="divide-y divide-[var(--border)] border-b border-[var(--border)]">
-          {filteredProjects.map((project) => (
+          {filteredProjects.map((project, idx) => (
             <article
               key={project.id}
               onMouseEnter={() => setSpotlightId(project.id)}
               className="grid items-baseline gap-4 py-8 md:grid-cols-12 md:gap-8"
             >
-              {/* Index */}
               <div className="font-mono text-xs text-[var(--ink-muted)] tabular-index md:col-span-1">
-                {project.index}
+                {project.index || padTwo(idx + 1)}
               </div>
 
-              {/* Title + optional status pill + Role */}
               <div className="md:col-span-4">
                 <div className="flex flex-wrap items-center gap-3">
                   <h3 className="editorial-tracking font-serif text-2xl text-[var(--ink)] sm:text-3xl">
@@ -214,12 +212,10 @@ export function SelectedWork() {
                 </div>
               </div>
 
-              {/* Impact Summary */}
               <p className="text-sm leading-relaxed text-[var(--ink-muted)] md:col-span-5 sm:text-base">
                 {project.summary}
               </p>
 
-              {/* View case study button */}
               <div className="md:col-span-2 md:text-right">
                 <button
                   type="button"
@@ -238,7 +234,7 @@ export function SelectedWork() {
             className="grid scroll-mt-24 items-baseline gap-4 py-8 md:grid-cols-12 md:gap-8"
           >
             <div className="font-mono text-xs text-[var(--ink-muted)] tabular-index md:col-span-1">
-              06
+              {padTwo(allProjects.length + 1)}
             </div>
 
             <div className="md:col-span-4">
@@ -248,16 +244,16 @@ export function SelectedWork() {
                   onClick={() => setPlaygroundOpen(true)}
                   className="rolling-trigger text-left"
                 >
-                  <RollingText>{PORTFOLIO_DATA.playground.title}</RollingText>
+                  <RollingText>{data.playground.title}</RollingText>
                 </button>
               </h3>
               <div className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--ink-muted)]">
-                {PORTFOLIO_DATA.playground.roleBadge}
+                {data.playground.roleBadge}
               </div>
             </div>
 
             <p className="text-sm leading-relaxed text-[var(--ink-muted)] md:col-span-5 sm:text-base">
-              {PORTFOLIO_DATA.playground.summary}
+              {data.playground.summary}
             </p>
 
             <div className="md:col-span-2 md:text-right">
@@ -273,7 +269,6 @@ export function SelectedWork() {
         </div>
       </div>
 
-      {/* Case Study / Playground Drawer */}
       <CaseStudyDrawer
         project={drawerProject}
         playgroundOpen={playgroundOpen}

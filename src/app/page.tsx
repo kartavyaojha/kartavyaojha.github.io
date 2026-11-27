@@ -6,20 +6,23 @@ import { AboutSection } from '@/components/AboutSection';
 import { ContactFooter } from '@/components/ContactFooter';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { CustomCursor } from '@/components/CustomCursor';
+import { PortfolioDataProvider } from '@/components/PortfolioDataContext';
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-[var(--bg)] text-[var(--ink)]">
-      <CustomCursor />
-      <Header />
-      <ThemeToggle />
-      <main>
-        <Hero />
-        <SelectedWork />
-        <SkillMarquee />
-        <AboutSection />
-      </main>
-      <ContactFooter />
-    </div>
+    <PortfolioDataProvider>
+      <div className="min-h-screen bg-[var(--bg)] text-[var(--ink)]">
+        <CustomCursor />
+        <Header />
+        <ThemeToggle />
+        <main>
+          <Hero />
+          <SelectedWork />
+          <SkillMarquee />
+          <AboutSection />
+        </main>
+        <ContactFooter />
+      </div>
+    </PortfolioDataProvider>
   );
 }

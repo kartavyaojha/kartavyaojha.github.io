@@ -2,11 +2,11 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import { PORTFOLIO_DATA } from '@/data/portfolio';
+import { usePortfolioData } from './PortfolioDataContext';
 import { useTheme } from './ThemeContext';
 import { RollingText } from './RollingText';
 
-function DarkroomPortrait() {
+function DarkroomPortrait({ avatarUrl }: { avatarUrl: string }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const { darkMode, motionEnabled } = useTheme();
@@ -14,6 +14,10 @@ function DarkroomPortrait() {
   const motionRef = useRef(motionEnabled);
   const darkRef = useRef(darkMode);
   const ripplesRef = useRef<{ x: number; y: number; r: number; maxR: number; a: number }[]>([]);
+
+  useEffect(() => {
+    setImgError(false);
+  }, [avatarUrl]);
 
   useEffect(() => {
     motionRef.current = motionEnabled;
@@ -125,9 +129,9 @@ function DarkroomPortrait() {
         ref={containerRef}
         className="relative aspect-[4/5] w-full cursor-crosshair overflow-hidden border border-[var(--border)] select-none"
       >
-        {!imgError ? (
+        {!imgError && avatarUrl ? (
           <Image
-            src={PORTFOLIO_DATA.profile.avatar}
+            src={avatarUrl}
             alt="Portrait of Kartavya Ojha"
             fill
             sizes="(max-width: 1024px) 100vw, 460px"
@@ -153,7 +157,8 @@ function DarkroomPortrait() {
 }
 
 export function AboutSection() {
-  const { profile, about } = PORTFOLIO_DATA;
+  const { data } = usePortfolioData();
+  const { profile, about } = data;
 
   return (
     <section
@@ -169,20 +174,17 @@ export function AboutSection() {
       </h2>
 
       <div className="mt-14 grid gap-12 lg:grid-cols-12 lg:gap-16">
-        {/* Left Column: Darkroom Developing Portrait */}
         <div className="lg:col-span-5">
-          <DarkroomPortrait />
+          <DarkroomPortrait avatarUrl={profile.avatar} />
         </div>
 
-        {/* Right Column: Background story, stack, certifications, hobbies, RollingText links */}
         <div className="flex flex-col justify-between space-y-10 lg:col-span-7">
           <div className="space-y-5 text-base leading-relaxed text-[var(--ink-muted)] sm:text-lg">
-            {about.story.map((p) => (
-              <p key={p}>{p}</p>
+            {about.story.map((p, idx) => (
+              <p key={idx}>{p}</p>
             ))}
           </div>
 
-          {/* Technical Stack */}
           <div className="border-t border-[var(--border)] pt-6">
             <h3 className="font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--ink-muted)]">
               Technical Stack
@@ -192,14 +194,13 @@ export function AboutSection() {
             </p>
           </div>
 
-          {/* Certifications & Recognition (pure hairline list) */}
           <div className="border-t border-[var(--border)] pt-6">
             <h3 className="font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--ink-muted)]">
               Certifications &amp; Recognition
             </h3>
             <ul className="mt-3 divide-y divide-[var(--border)] border-y border-[var(--border)]">
-              {about.certifications.map((cert) => (
-                <li key={cert.title}>
+              {about.certifications.map((cert, idx) => (
+                <li key={`${cert.title}-${idx}`}>
                   <a
                     href={cert.url}
                     target="_blank"
@@ -219,12 +220,10 @@ export function AboutSection() {
             </p>
           </div>
 
-          {/* Casual Hobbies */}
           <p className="border-t border-[var(--border)] pt-6 text-sm leading-relaxed text-[var(--ink-muted)] sm:text-base">
             {about.hobbiesLine}
           </p>
 
-          {/* Direct Links with RollingText */}
           <div className="flex flex-wrap items-center gap-6 pt-2 font-mono text-xs uppercase tracking-[0.14em] text-[var(--ink)]">
             <a
               href={`mailto:${profile.email}`}

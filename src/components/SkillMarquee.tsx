@@ -1,12 +1,13 @@
 'use client';
 
 import React from 'react';
-import { PORTFOLIO_DATA } from '@/data/portfolio';
+import { usePortfolioData } from './PortfolioDataContext';
 import { useTheme } from './ThemeContext';
 
 export function SkillMarquee() {
+  const { data } = usePortfolioData();
   const { motionEnabled } = useTheme();
-  const items = PORTFOLIO_DATA.skillsMarquee;
+  const items = data.skillsMarquee;
 
   const renderTrack = (prefix: string) => (
     <div className="flex shrink-0 items-center">

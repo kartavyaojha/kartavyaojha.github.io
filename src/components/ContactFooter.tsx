@@ -1,17 +1,18 @@
 'use client';
 
 import React, { useRef, useState } from 'react';
-import { PORTFOLIO_DATA } from '@/data/portfolio';
+import { usePortfolioData } from './PortfolioDataContext';
 import { FluidInkCanvas } from './InkCanvas';
 import { useTheme } from './ThemeContext';
 import { RollingText } from './RollingText';
 
 export function ContactFooter() {
   const footerRef = useRef<HTMLElement | null>(null);
+  const { data } = usePortfolioData();
   const [copied, setCopied] = useState(false);
   const [stirSignal, setStirSignal] = useState(0);
   const { darkMode } = useTheme();
-  const { profile } = PORTFOLIO_DATA;
+  const { profile } = data;
 
   const handleCopyEmail = async () => {
     try {

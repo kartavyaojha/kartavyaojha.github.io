@@ -2,7 +2,8 @@
 
 import React, { useEffect } from 'react';
 import { X, ArrowUpRight, CheckCircle2, Sparkles } from 'lucide-react';
-import { ProjectItem, PlaygroundItem, PORTFOLIO_DATA } from '@/data/portfolio';
+import { ProjectItem, PlaygroundItem } from '@/data/portfolio';
+import { usePortfolioData } from './PortfolioDataContext';
 import { RollingText } from './RollingText';
 
 interface CaseStudyDrawerProps {
@@ -16,6 +17,7 @@ export function CaseStudyDrawer({
   playgroundOpen,
   onClose,
 }: CaseStudyDrawerProps) {
+  const { data } = usePortfolioData();
   const isOpen = Boolean(project) || playgroundOpen;
 
   useEffect(() => {
@@ -38,7 +40,7 @@ export function CaseStudyDrawer({
       className="fixed inset-0 z-50 flex justify-end"
       role="dialog"
       aria-modal="true"
-      aria-label={project ? project.title : PORTFOLIO_DATA.playground.title}
+      aria-label={project ? project.title : data.playground.title}
     >
       {/* Backdrop */}
       <button
@@ -164,18 +166,18 @@ export function CaseStudyDrawer({
             <div>
               <div className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border-strong)] px-3 py-1 font-mono text-xs">
                 <Sparkles size={12} style={{ color: 'var(--accent)' }} />
-                <span>{PORTFOLIO_DATA.playground.roleBadge}</span>
+                <span>{data.playground.roleBadge}</span>
               </div>
               <h3 className="mt-4 font-serif text-3xl leading-tight sm:text-4xl">
-                {PORTFOLIO_DATA.playground.title}
+                {data.playground.title}
               </h3>
               <p className="mt-3 text-sm leading-relaxed text-[var(--ink-muted)]">
-                {PORTFOLIO_DATA.playground.summary}
+                {data.playground.summary}
               </p>
             </div>
 
             <div className="divide-y divide-[var(--border)] border-y border-[var(--border)]">
-              {PORTFOLIO_DATA.playground.items.map((item: PlaygroundItem) => (
+              {data.playground.items.map((item: PlaygroundItem) => (
                 <article key={item.title} className="py-5">
                   <div className="flex flex-wrap items-center justify-between gap-2 font-mono text-[11px] uppercase tracking-wider text-[var(--ink-muted)]">
                     <span>
@@ -217,7 +219,7 @@ export function CaseStudyDrawer({
 
             <div className="pt-2">
               <a
-                href={PORTFOLIO_DATA.profile.blog}
+                href={data.profile.blog}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 rounded-full bg-[var(--ink)] px-5 py-2.5 text-sm font-medium text-[var(--bg)] transition-opacity hover:opacity-85"

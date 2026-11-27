@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef } from 'react';
-import { PORTFOLIO_DATA } from '@/data/portfolio';
+import { usePortfolioData } from './PortfolioDataContext';
 import { FluidInkCanvas } from './InkCanvas';
 import { useTheme } from './ThemeContext';
 import { RollingText } from './RollingText';
@@ -9,8 +9,9 @@ import { RotatingHeroTitle } from './RotatingHeroTitle';
 
 export function Hero() {
   const sectionRef = useRef<HTMLElement | null>(null);
+  const { data } = usePortfolioData();
   const { darkMode, motionEnabled } = useTheme();
-  const { profile } = PORTFOLIO_DATA;
+  const { profile, heroTitles } = data;
 
   return (
     <>
@@ -20,22 +21,18 @@ export function Hero() {
         className="relative flex h-[100svh] min-h-[560px] flex-col justify-between overflow-hidden px-[clamp(20px,4vw,56px)] pb-[clamp(20px,3vw,40px)] pt-[clamp(18px,3vw,40px)]"
       >
         <h1 className="sr-only">
-          {profile.name}, Cybersecurity Analyst and Security Researcher in {profile.location}
+          {profile.name}, {profile.currentFocus} in {profile.location}
         </h1>
 
-        {/* Dense 3,800-particle curl-noise gold dust / ink fluid canvas */}
         <FluidInkCanvas containerRef={sectionRef} ambientCount={3800} />
 
-        {/* Top Header Clearance */}
         <div className="h-14" aria-hidden="true" />
 
-        {/* Giant Asymmetric Two-Line Grotesque Sans-Serif Rotating Role */}
-        <RotatingHeroTitle motionEnabled={motionEnabled} />
+        <RotatingHeroTitle motionEnabled={motionEnabled} titles={heroTitles} />
 
-        {/* Minimal Bottom Corners */}
         <div className="relative z-10 flex items-end justify-between gap-4 text-[11px] font-normal uppercase tracking-[0.14em] text-[var(--ink)] sm:text-[12px]">
           <div className="leading-[1.65]">
-            <div>Security Engineer &amp; SOC Analyst</div>
+            <div>{profile.currentFocus}</div>
             <div>{profile.location}</div>
           </div>
 
@@ -61,7 +58,6 @@ export function Hero() {
         </div>
       </section>
 
-      {/* Editorial Intro Statement Section directly beneath Hero */}
       <section
         id="intro"
         aria-label="Introduction"
