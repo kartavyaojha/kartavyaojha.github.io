@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   description:
     'Portfolio of Kartavya Ojha — Cybersecurity Analyst, Security Researcher, and Blue Team Defender in Indore, India.',
   icons: {
-    icon: '/favicon.png',
+    icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
   },
 };
 
