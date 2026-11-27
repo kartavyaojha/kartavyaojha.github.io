@@ -57,10 +57,19 @@ export function AdminDashboard() {
     window.setTimeout(() => setToast(null), 3200);
   };
 
+  const isAuthorizedAdmin = (candidate: FirebaseUser): boolean => {
+    const emailMatches =
+      candidate.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+    const isGoogleProvider = candidate.providerData.some(
+      (p) => p.providerId === 'google.com'
+    );
+    return emailMatches && candidate.emailVerified && isGoogleProvider;
+  };
+
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (nextUser) => {
       if (nextUser) {
-        if (nextUser.email?.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+        if (!isAuthorizedAdmin(nextUser)) {
           await signOut(auth);
           setUser(null);
           setAuthError('Access Denied — Unauthorized Account');
@@ -102,7 +111,7 @@ export function AdminDashboard() {
     setAuthError(null);
     try {
       const cred = await signInWithPopup(auth, googleProvider);
-      if (cred.user.email?.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+      if (!isAuthorizedAdmin(cred.user)) {
         await signOut(auth);
         setUser(null);
         setAuthError('Access Denied — Unauthorized Account');
@@ -138,8 +147,10 @@ export function AdminDashboard() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const payload = JSON.parse(JSON.stringify(data)) as PortfolioData;
+      const sanitized = mergePortfolioData(data);
+      const payload = JSON.parse(JSON.stringify(sanitized)) as PortfolioData;
       await setDoc(doc(db, 'portfolio', 'main'), payload);
+      setData(payload);
       setDbExists(true);
       showToast('ok', 'Saved changes to Firestore (portfolio/main).');
     } catch (err) {

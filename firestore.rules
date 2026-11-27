@@ -1,0 +1,37 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Only allow public reads and strictly authenticated admin writes on portfolio/main
+    match /portfolio/main {
+      allow read: if true;
+      allow write: if request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.firebase.sign_in_provider == 'google.com'
+        && request.auth.token.email == 'kartavya9977@gmail.com'
+        && request.resource.data.keys().hasAll([
+          'profile',
+          'heroTitles',
+          'categories',
+          'projects',
+          'playground',
+          'skillsMarquee',
+          'about'
+        ])
+        && request.resource.data.keys().hasOnly([
+          'profile',
+          'heroTitles',
+          'categories',
+          'projects',
+          'playground',
+          'skillsMarquee',
+          'about'
+        ]);
+    }
+
+    // Deny all reads and writes on every other document or collection
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -398,10 +398,71 @@ export const PORTFOLIO_DATA: PortfolioData = {
   },
 };
 
+export function sanitizeUrl(url: unknown, fallback = ''): string {
+  if (typeof url !== 'string') return fallback;
+  const trimmed = url.trim();
+  if (!trimmed) return fallback;
+  // Allow clean relative paths starting with single '/' (not '//')
+  if (trimmed.startsWith('/') && !trimmed.startsWith('//')) {
+    return trimmed;
+  }
+  try {
+    const parsed = new URL(trimmed);
+    if (
+      parsed.protocol === 'https:' ||
+      parsed.protocol === 'http:' ||
+      parsed.protocol === 'mailto:'
+    ) {
+      return trimmed;
+    }
+  } catch {
+    return fallback;
+  }
+  return fallback;
+}
+
 export function mergePortfolioData(raw: Partial<PortfolioData> | null | undefined): PortfolioData {
   if (!raw) return PORTFOLIO_DATA;
+  const mergedProfile = { ...PORTFOLIO_DATA.profile, ...(raw.profile ?? {}) };
+  mergedProfile.resume = sanitizeUrl(mergedProfile.resume, PORTFOLIO_DATA.profile.resume);
+  mergedProfile.avatar = sanitizeUrl(mergedProfile.avatar, PORTFOLIO_DATA.profile.avatar);
+  mergedProfile.linkedin = sanitizeUrl(mergedProfile.linkedin, PORTFOLIO_DATA.profile.linkedin);
+  mergedProfile.github = sanitizeUrl(mergedProfile.github, PORTFOLIO_DATA.profile.github);
+  mergedProfile.blog = sanitizeUrl(mergedProfile.blog, PORTFOLIO_DATA.profile.blog);
+
+  const projects = (Array.isArray(raw.projects) ? raw.projects : PORTFOLIO_DATA.projects).map(
+    (proj, idx) => ({
+      ...proj,
+      index: String(idx + 1).padStart(2, '0'),
+      imageUrl: sanitizeUrl(proj.imageUrl, ''),
+      links: Array.isArray(proj.links)
+        ? proj.links
+            .map((l) => ({ ...l, url: sanitizeUrl(l.url, '') }))
+            .filter((l) => l.url !== '')
+        : [],
+    })
+  );
+
+  const playgroundItems = (
+    Array.isArray(raw.playground?.items)
+      ? raw.playground.items
+      : PORTFOLIO_DATA.playground.items
+  ).map((item) => ({
+    ...item,
+    url: item.url ? sanitizeUrl(item.url, '') : undefined,
+  }));
+
+  const certs = (
+    Array.isArray(raw.about?.certifications)
+      ? raw.about.certifications
+      : PORTFOLIO_DATA.about.certifications
+  ).map((c) => ({
+    ...c,
+    url: sanitizeUrl(c.url, '#'),
+  }));
+
   return {
-    profile: { ...PORTFOLIO_DATA.profile, ...(raw.profile ?? {}) },
+    profile: mergedProfile,
     heroTitles:
       Array.isArray(raw.heroTitles) && raw.heroTitles.length > 0
         ? raw.heroTitles
@@ -410,13 +471,11 @@ export function mergePortfolioData(raw: Partial<PortfolioData> | null | undefine
       Array.isArray(raw.categories) && raw.categories.length > 0
         ? raw.categories
         : PORTFOLIO_DATA.categories,
-    projects: Array.isArray(raw.projects) ? raw.projects : PORTFOLIO_DATA.projects,
+    projects,
     playground: {
       ...PORTFOLIO_DATA.playground,
       ...(raw.playground ?? {}),
-      items: Array.isArray(raw.playground?.items)
-        ? raw.playground.items
-        : PORTFOLIO_DATA.playground.items,
+      items: playgroundItems,
     },
     skillsMarquee:
       Array.isArray(raw.skillsMarquee) && raw.skillsMarquee.length > 0
@@ -427,9 +486,7 @@ export function mergePortfolioData(raw: Partial<PortfolioData> | null | undefine
       ...(raw.about ?? {}),
       story: Array.isArray(raw.about?.story) ? raw.about.story : PORTFOLIO_DATA.about.story,
       stack: Array.isArray(raw.about?.stack) ? raw.about.stack : PORTFOLIO_DATA.about.stack,
-      certifications: Array.isArray(raw.about?.certifications)
-        ? raw.about.certifications
-        : PORTFOLIO_DATA.about.certifications,
+      certifications: certs,
       awards: Array.isArray(raw.about?.awards) ? raw.about.awards : PORTFOLIO_DATA.about.awards,
     },
   };
