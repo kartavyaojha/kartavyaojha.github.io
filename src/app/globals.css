@@ -376,6 +376,71 @@ html.motion-paused *::after {
   transition-duration: 0.001ms !important;
 }
 
+/* Liquid-Glass Hero Resume Pill */
+.resume-glass-pill {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 9999px;
+  padding: 9px 18px;
+  background: linear-gradient(135deg, rgba(244, 239, 230, 0.08), rgba(244, 239, 230, 0.02));
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  backdrop-filter: blur(14px) saturate(160%);
+  border: 1px solid rgba(244, 239, 230, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 8px 24px rgba(0, 0, 0, 0.35);
+  color: #F4EFE6;
+  transition:
+    background 250ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 250ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 250ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 250ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 250ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html:not(.dark) .resume-glass-pill {
+  background: linear-gradient(135deg, rgba(20, 20, 19, 0.08), rgba(20, 20, 19, 0.02));
+  border-color: rgba(20, 20, 19, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65), 0 8px 22px rgba(20, 20, 19, 0.1);
+  color: #141413;
+}
+
+.resume-glass-pill::before {
+  content: "";
+  position: absolute;
+  inset: -40% -20%;
+  background: linear-gradient(
+    110deg,
+    transparent 35%,
+    rgba(255, 243, 214, 0.18) 50%,
+    transparent 65%
+  );
+  transform: translateX(-130%);
+  transition: transform 550ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.resume-glass-pill:hover {
+  background: rgba(216, 185, 138, 0.12);
+  border-color: rgba(216, 185, 138, 0.45);
+  transform: translateY(-1px);
+  box-shadow: inset 0 1px 0 rgba(255, 243, 214, 0.28), 0 10px 28px rgba(0, 0, 0, 0.42);
+}
+
+.resume-glass-pill:hover::before {
+  transform: translateX(130%);
+}
+
+.resume-glass-pill .resume-arrow {
+  display: inline-block;
+  transition: transform 250ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.resume-glass-pill:hover .resume-arrow {
+  transform: translate(2px, -2px);
+}
+
 ::selection {
   background-color: rgba(230, 199, 139, 0.35);
   color: var(--ink);

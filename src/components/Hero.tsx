@@ -43,13 +43,14 @@ export function Hero() {
                   href={safeResumeHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-1 border-b border-transparent pb-0.5 font-sans text-[11px] uppercase tracking-[0.14em] text-[var(--ink)] transition-colors duration-200 hover:border-[#D8B98A] hover:text-[#D8B98A] sm:text-[12px]"
+                  className="resume-glass-pill font-sans text-[11px] uppercase tracking-[0.14em] sm:text-[12px]"
                 >
-                  <span>Resume</span>
                   <span
                     aria-hidden="true"
-                    className="inline-block transition-transform duration-200 group-hover:translate-x-[2px] group-hover:-translate-y-[2px]"
-                  >
+                    className="h-1.5 w-1.5 rounded-full bg-[#D8B98A]"
+                  />
+                  <span>Resume</span>
+                  <span aria-hidden="true" className="resume-arrow">
                     ↗
                   </span>
                 </a>
