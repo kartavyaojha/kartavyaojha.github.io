@@ -1,0 +1,243 @@
+{
+  "profile": {
+    "name": "Kartavya Ojha",
+    "siteTitle": "Kartavya | Hacker",
+    "headline": "Security Engineer & Cybersecurity Researcher",
+    "roles": [
+      "a Cybersecurity Researcher",
+      "an Ethical Hacker",
+      "a SOC Analyst",
+      "a Mentor & Learner"
+    ],
+    "bio": [
+      "I’m a cybersecurity professional passionate about ethical hacking, SOC operations, and system defense. I previously served as Technical Projects & Outreach Lead at ACS and completed an internship with Albus Security, gaining hands-on experience in security tools, penetration testing, and team mentorship.",
+      "Currently focusing on building SOC simulations, mastering Splunk, and advancing my expertise in threat detection and response."
+    ],
+    "highlights": [
+      "Led cybersecurity workshops, awareness drives, and social media initiatives at ACS, building strong community engagement.",
+      "Mentored a 13-member project team to develop a Vulnerability Assessment Framework — awarded a Certificate of Appreciation for leadership.",
+      "Built practical security tools at Albus Security, including a Remote Code Execution detector and automation scripts for penetration testing."
+    ],
+    "location": "Indore, India",
+    "email": "kartavya9977@gmail.com",
+    "links": {
+      "github": "https://github.com/kartavyaojha",
+      "linkedin": "https://linkedin.com/in/kartavya-ojha-564726314",
+      "blog": "https://defencelogic.wordpress.com/",
+      "resumePdf": "assets/Kartavya_Resume.pdf"
+    },
+    "legacyProfileImageUrl": "https://media.licdn.com/dms/image/v2/D4D03AQEGqshBmY9ENQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1719171097113?e=1759363200&v=beta&t=LkWAWoX4pVm36wq5hS-Iwtrd9axuI0EGxCqFyCCRFZM"
+  },
+  "experience": [
+    {
+      "title": "Technical Projects & Outreach Lead",
+      "company": "Association for Cyber Security (ACS)",
+      "location": "Remote / India",
+      "period": "Jul 2024 – Jul 2025",
+      "type": "Internship",
+      "description": "Led technical initiatives and outreach efforts to strengthen ACS’s presence in cybersecurity education and awareness.",
+      "responsibilities": [
+        "Spearheaded creation and management of cybersecurity-focused content across ACS social media platforms, boosting community engagement.",
+        "Launched awareness campaigns to educate students and professionals on security fundamentals and best practices.",
+        "Coordinated training and upskilling programs, streamlining onboarding and boosting effectiveness.",
+        "Organized and facilitated webinars and technical workshops, attracting participants from multiple universities."
+      ],
+      "technologies": [
+        "Cybersecurity Awareness",
+        "Team Leadership",
+        "Content Strategy",
+        "Workshops"
+      ]
+    },
+    {
+      "title": "Cybersecurity Project Mentor",
+      "company": "Association for Cyber Security (ACS)",
+      "location": "Remote / India",
+      "period": "Jul 2024 – Feb 2025",
+      "type": "Mentorship",
+      "description": "Guided Team Guardian in developing a Vulnerability Assessment Framework while ensuring secure coding practices.",
+      "responsibilities": [
+        "Mentored and guided a team of 13 members in building a full Vulnerability Assessment Framework.",
+        "Provided project planning, secure coding reviews, and technical leadership.",
+        "Ensured delivery of robust and sustainable cybersecurity solutions.",
+        "Received Certificate of Appreciation for outstanding mentorship and leadership."
+      ],
+      "technologies": [
+        "Python",
+        "Security Frameworks",
+        "Mentorship",
+        "Project Management"
+      ]
+    },
+    {
+      "title": "Cybersecurity Intern",
+      "company": "Albus Security",
+      "location": "Remote / India",
+      "period": "Feb 2024 – Sep 2024",
+      "type": "Internship",
+      "description": "Worked on security tool development, penetration testing, and vulnerability remediation.",
+      "responsibilities": [
+        "Developed and deployed tools like a Remote Code Execution (RCE) detector and an educational keylogger.",
+        "Engineered and tested automation scripts including brute-force and reverse shell payloads, improving penetration testing coverage.",
+        "Diagnosed and fixed web application vulnerabilities such as open redirections and logic flaws.",
+        "Awarded Certificate of Excellence and Letter of Recommendation for impactful contributions."
+      ],
+      "technologies": [
+        "Python",
+        "Burp Suite",
+        "Linux",
+        "Web Security",
+        "Penetration Testing"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "title": "SOC-L1 SimLab",
+      "description": "An open-source SOC Level 1 triage simulator built with Python and Streamlit. Features a war-room dashboard, severity color coding, contextual event details, and hands-on incident triage with escalation and documentation.",
+      "tags": ["Python", "Streamlit", "SOC", "Incident Response"],
+      "github": "https://github.com/kartavyaojha/SOC-L1-SimLab",
+      "live": null
+    },
+    {
+      "title": "Python Security Tools Suite",
+      "description": "A collection of security testing tools including a keylogger, RCE scanner, brute-force scripts, and reverse shell payloads. Designed for training and penetration testing in controlled environments.",
+      "tags": ["Python", "Cybersecurity", "Pentesting", "Automation"],
+      "github": "https://github.com/kartavyaojha",
+      "live": null
+    },
+    {
+      "title": "Exploit Development Project",
+      "description": "Developed Python-based exploits including a keylogger and RCE script to demonstrate common vulnerabilities. Enhanced detection and mitigation of exploit patterns through lab exercises.",
+      "tags": ["Python", "Exploits", "Security Research"],
+      "github": "https://github.com/kartavyaojha",
+      "live": null
+    }
+  ],
+  "education": [
+    {
+      "school": "Mandsaur University",
+      "degree": "BCA (Bachelor of Computer Applications)",
+      "status": "Ongoing",
+      "period": "2024 - 2027",
+      "activities": ["Cybersecurity Club", "Workshops & Technical Events"],
+      "achievements": [
+        "Published a research paper on 'Reducing SOC Analyst Burnout' in the International Conference on Innovative Engineering and Computational Technologies (ICIECT)."
+      ]
+    },
+    {
+      "school": "Florence International School, Manasa",
+      "degree": "High School",
+      "status": "Completed",
+      "period": "2015 - 2023",
+      "activities": ["Sports In charge", "Football Team Vice-Captain"],
+      "achievements": [
+        "Won the district level football competition",
+        "Sports in charge of sunflower house"
+      ]
+    }
+  ],
+  "publications": [
+    {
+      "title": "Reducing SOC Analyst Burnout",
+      "venue": "International Conference on Innovative Engineering and Computational Technologies (ICIECT)",
+      "note": "Referenced in Education.tsx; Publications.tsx previously contained template placeholder data."
+    }
+  ],
+  "skills": [
+    {
+      "category": "Cybersecurity",
+      "items": [
+        { "name": "Penetration Testing", "level": 95 },
+        { "name": "Vulnerability Assessment", "level": 90 },
+        { "name": "Red Team Operations", "level": 85 },
+        { "name": "Incident Response", "level": 80 }
+      ]
+    },
+    {
+      "category": "Programming & Tools",
+      "items": [
+        { "name": "Python", "level": 90 },
+        { "name": "Go", "level": 75 },
+        { "name": "Burp Suite", "level": 95 },
+        { "name": "Metasploit", "level": 85 }
+      ]
+    },
+    {
+      "category": "Cloud & Infrastructure",
+      "items": [
+        { "name": "Google Cloud Platform", "level": 85 },
+        { "name": "Kubernetes", "level": 75 },
+        { "name": "Docker", "level": 80 },
+        { "name": "Linux Administration", "level": 90 }
+      ]
+    }
+  ],
+  "certifications": [
+    {
+      "title": "Google Cybersecurity Professional",
+      "organization": "Google",
+      "year": "2025",
+      "description": "Comprehensive program covering core cybersecurity concepts, risk management, and hands-on skills.",
+      "link": "https://coursera.org/verify/professional-cert/WZZRLA4CFJOG"
+    },
+    {
+      "title": "Ethical Hacking Essentials",
+      "organization": "EC-Council",
+      "year": "2023",
+      "description": "Credential demonstrating proficiency in ethical hacking fundamentals and penetration testing practices.",
+      "link": "https://learn.eccouncil.org/certificate/b17f1d33-feba-4a20-ac6f-ebb3fb1e0bb8"
+    },
+    {
+      "title": "Cybersecurity Fundamentals",
+      "organization": "IBM",
+      "year": "2024",
+      "description": "Certification covering networking security, incident response, and core cybersecurity concepts.",
+      "link": "https://www.credly.com/badges/d378d1ee-4523-4f3c-bd41-f1c20dccab04/public_url"
+    },
+    {
+      "title": "Introduction to Splunk",
+      "organization": "Splunk",
+      "year": "2024",
+      "description": "Certified in leveraging Splunk for data analysis, SPL queries, and monitoring security logs.",
+      "link": "https://www.credly.com/badges/splunk-introduction"
+    }
+  ],
+  "awards": [
+    {
+      "title": "Certificate of Excellence",
+      "organization": "Albus Security",
+      "year": "2024",
+      "description": "Awarded for outstanding contributions during cybersecurity internship, including development of RCE detector and penetration testing tools."
+    },
+    {
+      "title": "Certificate of Appreciation",
+      "organization": "Association for Cyber Security (ACS)",
+      "year": "2025",
+      "description": "Recognized for mentoring Team Guardian in the development of a Vulnerability Assessment Framework and providing leadership guidance."
+    }
+  ],
+  "blogs": [
+    {
+      "title": "How Hackers Use Your Social Media for OSINT and Why It Is an Information Goldmine",
+      "description": "Exploring how attackers use open-source intelligence (OSINT) from platforms like Instagram, LinkedIn, and Twitter to craft targeted attacks—and how you can safeguard your digital footprint.",
+      "platform": "WordPress",
+      "date": null,
+      "link": "https://defencelogic.wordpress.com/2025/08/18/how-hackers-use-your-social-media-for-osint-and-why-it-is-an-information-goldmine/"
+    },
+    {
+      "title": "The Journey from CTFs to Google: Real Lessons from a Cybersecurity Pro",
+      "description": "A personal narrative on how participating in Capture The Flag (CTF) competitions can pave the way to a career in cybersecurity, A story of growth, learning, and seizing opportunities.",
+      "platform": "WordPress",
+      "date": "August 25, 2025",
+      "link": "https://defencelogic.wordpress.com/2025/08/28/the-journey-from-ctfs-to-google-real-lessons-from-a-cybersecurity-pro/"
+    },
+    {
+      "title": "Welcome to SOC School: Your Cyber Mentor’s Guide!",
+      "description": "An engaging introduction to Security Operations Centers (SOC)—breaking down how SOCs detect, respond, and manage cyber threats in a fun, relatable way.",
+      "platform": "WordPress",
+      "date": "July 31, 2025",
+      "link": "https://defencelogic.wordpress.com/2025/07/31/welcome-to-soc-school-your-cyber-mentors-guide/"
+    }
+  ]
+}
