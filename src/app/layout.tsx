@@ -26,11 +26,35 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://kartavyaojha.github.io'),
   title: 'Kartavya Ojha — Cybersecurity Researcher & Security Engineer',
   description:
     'Portfolio of Kartavya Ojha — Cybersecurity Analyst, Security Researcher, and Blue Team Defender in Indore, India.',
   icons: {
     icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
+  },
+  openGraph: {
+    type: 'website',
+    url: 'https://kartavyaojha.github.io/',
+    title: 'Kartavya Ojha — Cybersecurity Researcher & Security Engineer',
+    description:
+      'Portfolio of Kartavya Ojha — Cybersecurity Analyst, Security Researcher, and Blue Team Defender in Indore, India.',
+    images: [
+      {
+        url: 'https://kartavyaojha.github.io/og-image.png',
+        width: 1200,
+        height: 630,
+        type: 'image/png',
+        alt: 'Kartavya Ojha — Cybersecurity & SOC Analyst',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Kartavya Ojha — Cybersecurity Researcher & Security Engineer',
+    description:
+      'Portfolio of Kartavya Ojha — Cybersecurity Analyst, Security Researcher, and Blue Team Defender in Indore, India.',
+    images: ['https://kartavyaojha.github.io/og-image.png'],
   },
 };
 
