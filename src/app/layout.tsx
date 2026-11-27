@@ -11,20 +11,39 @@ import '@fontsource/jetbrains-mono/500.css';
 import './globals.css';
 import { ThemeProvider } from '@/components/ThemeContext';
 
+const PERSON_JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Kartavya Ojha',
+  url: 'https://kartavyaojha.github.io/',
+  jobTitle: 'Cybersecurity & SOC Analyst',
+  image: 'https://kartavyaojha.github.io/og-image.png',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Indore',
+    addressCountry: 'IN',
+  },
+  sameAs: [
+    'https://github.com/kartavyaojha',
+    'https://linkedin.com/in/kartavya-ojha-564726314',
+    'https://defencelogic.wordpress.com/',
+  ],
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://kartavyaojha.github.io'),
-  title: 'Kartavya Ojha — Cybersecurity Researcher & Security Engineer',
+  title: 'Kartavya Ojha — Cybersecurity & SOC Analyst',
   description:
-    'Portfolio of Kartavya Ojha — Cybersecurity Analyst, Security Researcher, and Blue Team Defender in Indore, India.',
+    'Portfolio of Kartavya Ojha — Cybersecurity Analyst, SOC Blue Team defender, and security researcher based in Indore, India.',
   icons: {
     icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
   },
   openGraph: {
     type: 'website',
     url: 'https://kartavyaojha.github.io/',
-    title: 'Kartavya Ojha — Cybersecurity Researcher & Security Engineer',
+    title: 'Kartavya Ojha — Cybersecurity & SOC Analyst',
     description:
-      'Portfolio of Kartavya Ojha — Cybersecurity Analyst, Security Researcher, and Blue Team Defender in Indore, India.',
+      'Portfolio of Kartavya Ojha — Cybersecurity Analyst, SOC Blue Team defender, and security researcher based in Indore, India.',
     images: [
       {
         url: 'https://kartavyaojha.github.io/og-image.png',
@@ -37,9 +56,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Kartavya Ojha — Cybersecurity Researcher & Security Engineer',
+    title: 'Kartavya Ojha — Cybersecurity & SOC Analyst',
     description:
-      'Portfolio of Kartavya Ojha — Cybersecurity Analyst, Security Researcher, and Blue Team Defender in Indore, India.',
+      'Portfolio of Kartavya Ojha — Cybersecurity Analyst, SOC Blue Team defender, and security researcher based in Indore, India.',
     images: ['https://kartavyaojha.github.io/og-image.png'],
   },
 };
@@ -51,6 +70,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(PERSON_JSON_LD) }}
+        />
+      </head>
       <body className="min-h-screen antialiased">
         <div className="paper-grain-overlay" aria-hidden="true" />
         <ThemeProvider>{children}</ThemeProvider>
