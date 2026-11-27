@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import {
   ArrowDown,
   ArrowUp,
+  ArrowUpRight,
   Plus,
   Trash2,
 } from 'lucide-react';
@@ -12,6 +13,7 @@ import {
   PreviewVariant,
   ProjectCategory,
   ProjectItem,
+  sanitizeUrl,
 } from '@/data/portfolio';
 
 const inputCls =
@@ -100,13 +102,41 @@ export function HeroTitlesEditor({
             />
           </div>
           <div className="sm:col-span-2">
-            <label className={labelCls}>Resume PDF Path or URL</label>
-            <input
-              type="text"
-              value={profile.resume}
-              onChange={(e) => updateProfile({ resume: e.target.value })}
-              className={inputCls}
-            />
+            <label className={labelCls}>Resume PDF URL</label>
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <input
+                type="url"
+                value={data.resumeUrl}
+                placeholder="https://drive.google.com/file/d/.../view"
+                onChange={(e) => {
+                  const resumeUrl = e.target.value;
+                  onChange({
+                    ...data,
+                    resumeUrl,
+                    profile: { ...profile, resume: resumeUrl },
+                  });
+                }}
+                className={inputCls}
+              />
+              {sanitizeUrl(data.resumeUrl, '') ? (
+                <a
+                  href={sanitizeUrl(data.resumeUrl, '')}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-lg border border-[#D8B98A]/45 bg-[#D8B98A]/10 px-4 py-2.5 font-mono text-xs text-[#D8B98A] transition-colors hover:bg-[#D8B98A]/20"
+                >
+                  <span>Test Link</span>
+                  <ArrowUpRight size={14} />
+                </a>
+              ) : (
+                <span className="inline-flex shrink-0 cursor-not-allowed items-center justify-center gap-1.5 rounded-lg border border-[rgba(244,239,230,0.08)] px-4 py-2.5 font-mono text-xs text-[#7C776E]">
+                  <span>Test Link ↗</span>
+                </span>
+              )}
+            </div>
+            <p className="mt-1.5 text-[11px] text-[#9E988E]">
+              Leave empty to hide the RESUME ↗ link on your Hero automatically.
+            </p>
           </div>
           <div className="sm:col-span-2">
             <label className={labelCls}>Intro Statement (Shown Below Hero)</label>

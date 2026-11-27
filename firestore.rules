@@ -19,6 +19,7 @@ service cloud.firestore {
           'about'
         ])
         && request.resource.data.keys().hasOnly([
+          'resumeUrl',
           'profile',
           'heroTitles',
           'categories',

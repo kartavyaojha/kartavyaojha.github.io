@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useRef } from 'react';
+import { sanitizeUrl } from '@/data/portfolio';
 import { usePortfolioData } from './PortfolioDataContext';
 import { FluidInkCanvas } from './InkCanvas';
 import { useTheme } from './ThemeContext';
@@ -11,7 +12,8 @@ export function Hero() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const { data } = usePortfolioData();
   const { darkMode, motionEnabled } = useTheme();
-  const { profile, heroTitles } = data;
+  const { profile, heroTitles, resumeUrl } = data;
+  const safeResumeHref = sanitizeUrl(resumeUrl, '');
 
   return (
     <>
@@ -34,6 +36,25 @@ export function Hero() {
           <div className="leading-[1.65]">
             <div>{profile.currentFocus}</div>
             <div>{profile.location}</div>
+
+            {safeResumeHref && (
+              <div className="mt-3.5">
+                <a
+                  href={safeResumeHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex items-center gap-1 border-b border-transparent pb-0.5 font-sans text-[11px] uppercase tracking-[0.14em] text-[var(--ink)] transition-colors duration-200 hover:border-[#D8B98A] hover:text-[#D8B98A] sm:text-[12px]"
+                >
+                  <span>Resume</span>
+                  <span
+                    aria-hidden="true"
+                    className="inline-block transition-transform duration-200 group-hover:translate-x-[2px] group-hover:-translate-y-[2px]"
+                  >
+                    ↗
+                  </span>
+                </a>
+              </div>
+            )}
           </div>
 
           <div className="hidden text-center text-[12px] normal-case tracking-normal text-[var(--ink-muted)] md:block">

@@ -55,6 +55,7 @@ export interface CertificationItem {
 }
 
 export interface PortfolioData {
+  resumeUrl: string;
   profile: {
     name: string;
     firstName: string;
@@ -93,6 +94,7 @@ export interface PortfolioData {
 }
 
 export const PORTFOLIO_DATA: PortfolioData = {
+  resumeUrl: '/Kartavya_Resume/index.pdf',
   profile: {
     name: 'Kartavya Ojha',
     firstName: 'Kartavya',
@@ -423,8 +425,14 @@ export function sanitizeUrl(url: unknown, fallback = ''): string {
 
 export function mergePortfolioData(raw: Partial<PortfolioData> | null | undefined): PortfolioData {
   if (!raw) return PORTFOLIO_DATA;
+  const rawResumeUrl =
+    typeof raw.resumeUrl === 'string'
+      ? raw.resumeUrl
+      : raw.profile?.resume ?? PORTFOLIO_DATA.resumeUrl;
+  const resumeUrl = rawResumeUrl.trim() === '' ? '' : sanitizeUrl(rawResumeUrl, '');
+
   const mergedProfile = { ...PORTFOLIO_DATA.profile, ...(raw.profile ?? {}) };
-  mergedProfile.resume = sanitizeUrl(mergedProfile.resume, PORTFOLIO_DATA.profile.resume);
+  mergedProfile.resume = resumeUrl;
   mergedProfile.avatar = sanitizeUrl(mergedProfile.avatar, PORTFOLIO_DATA.profile.avatar);
   mergedProfile.linkedin = sanitizeUrl(mergedProfile.linkedin, PORTFOLIO_DATA.profile.linkedin);
   mergedProfile.github = sanitizeUrl(mergedProfile.github, PORTFOLIO_DATA.profile.github);
@@ -462,6 +470,7 @@ export function mergePortfolioData(raw: Partial<PortfolioData> | null | undefine
   }));
 
   return {
+    resumeUrl,
     profile: mergedProfile,
     heroTitles:
       Array.isArray(raw.heroTitles) && raw.heroTitles.length > 0
